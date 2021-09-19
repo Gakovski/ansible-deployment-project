@@ -1,0 +1,2 @@
+[Ansible_Node]
+192.168.0.19      ansible_ssh_user=node   ansible_ssh_pass=node123

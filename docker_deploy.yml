@@ -1,0 +1,12 @@
+- hosts: "Ansible_Node"
+  become: yes
+  become_method: sudo
+  tasks: 
+  - name: Deploy Docker Compose stack
+    docker_compose:
+      project_src: /home/node/repo
+      files:
+      - docker-compose.yml
+
+      
+#ansible-playbook -i myhosts.txt docker_deploy.yml --ask-become-pass

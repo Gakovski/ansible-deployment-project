@@ -1,0 +1,49 @@
+- hosts: "Ansible_Node"
+  become: yes
+  become_method: sudo
+  tasks:
+    - vars:
+      CTOP_VERSION: "0.7.3"
+      DOCKER_COMPOSE_VERSION: "1.25.1"
+      USER: "node"
+  
+  tasks:
+  - name: Update apt packages 
+    apt:
+      update_cache: "yes"
+      force_apt_get: "yes"
+      
+  - name: Add Docker GPG apt key
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+      
+  - name: Add Docker Repository
+    apt_repository:
+      repo: deb https://download.docker.com/linux/ubuntu bionic stable
+      state: present
+      update_cache: "yes"
+      
+  - name: Pull frontend image
+    docker_image:
+      name: gakovski/emt_frontend
+      source: pull
+  
+  - name: Pull backend image
+    docker_image:
+      name: gakovski/emt_backend
+      source: pull
+
+  - name: Send docker-compose.yml to remote server
+    ansible.builtin.copy:
+      src: /home/david/idea-IU-203.7148.57/IdeaProjects/EMT_Lab2/docker-compose.yml
+      dest: /home/node/docker-compose.yml
+      owner: node
+      group: node
+      mode: '0777'
+
+  - name: Git pull
+    ansible.builtin.git:
+      repo: 'https://github.com/Gakovski/EMT_Lab2.git'
+      dest: /home/node/repo
+
